@@ -1,0 +1,42 @@
+data:
+   container_name: magento2_data
+   image: busybox
+   volumes:
+       - ../magento2:/var/www/magento2/
+
+nginx: 
+   container_name: magento2_nginx
+   build: builds/nginx
+   volumes_from:
+       - data
+   links:
+       - php:php
+   volumes:
+       - ./logs/nginx:/var/log/nginx
+
+php:
+   container_name: magento2_php
+   build: builds/php
+   volumes_from:
+       - data
+   links:
+       - mysql:mysql
+       - mongo:mongo
+
+mysql:
+   container_name: magento2_mysql
+   image: mysql:5.6
+   volumes:
+       - ./mysql:/var/lib/mysql
+   environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: magento2
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+
+mongo:
+    container_name: magento2_mongo
+    build: builds/mongo
+    volumes:
+      - ./mongo:/var/lib/mongodb
+    command: --rest
