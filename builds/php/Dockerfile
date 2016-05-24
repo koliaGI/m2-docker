@@ -5,6 +5,8 @@ RUN groupmod --gid 1000 m2
 RUN usermod -aG 1000 m2
 RUN usermod -u 1000 m2
 
+COPY php.ini /usr/local/etc/php/
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN apt-get update && apt-get install zip unzip -y
@@ -35,7 +37,7 @@ RUN  docker-php-ext-install -j$(nproc) iconv mcrypt \
 	 && docker-php-ext-install soap \
 	 && docker-php-ext-install intl \
 	 && docker-php-ext-install pdo pdo_mysql \
-	 && docker-php-ext-install pdo_mysql 
+	 && docker-php-ext-install pdo_mysql 				
  
 RUN apt-get update && apt-get install -y \
         libssl-dev \

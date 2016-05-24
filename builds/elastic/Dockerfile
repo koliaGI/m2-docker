@@ -1,0 +1,11 @@
+FROM elasticsearch
+
+RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+RUN echo "deb http://packages.elastic.co/kibana/4.5/debian stable main" | tee -a /etc/apt/sources.list
+RUN apt-get update && apt-get install kibana
+RUN update-rc.d kibana defaults 95 10
+
+RUN plugin install license \
+                   marvel-agent \
+                   elasticsearch/marvel/latest
+

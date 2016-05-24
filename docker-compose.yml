@@ -22,12 +22,14 @@ php:
    links:
        - mysql:mysql
        - mongo:mongo
+       - elastic:elastic
 
 mysql:
    container_name: magento2_mysql
    image: mysql:5.6
    volumes:
        - ./mysql:/var/lib/mysql
+       - ./logs/mysql:/var/log
    environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: magento2
@@ -38,5 +40,14 @@ mongo:
     container_name: magento2_mongo
     build: builds/mongo
     volumes:
-      - ./mongo:/var/lib/mongodb
+      - ./mongo:/data/db
+      - ./logs/mongo:/var/log/mongodb
     command: --rest
+
+elastic:
+    container_name: magento2_elastic
+    build: builds/elastic
+    volumes:
+      - ./elastic/config:/usr/share/elasticsearch/config
+      - ./logs/elastic:/usr/share/elasticsearch/log
+      - ./elastic/data:/usr/share/elasticsearch/data
