@@ -9,3 +9,9 @@ RUN plugin install license \
                    marvel-agent \
                    elasticsearch/marvel/latest
 
+ENV TERM xterm
+ADD bashrc /var/www/html/.bashrc
+ADD bashrc /root/.bashrc
+
+RUN apt-get install nano -y
+

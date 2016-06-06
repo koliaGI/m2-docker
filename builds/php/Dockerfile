@@ -1,9 +1,8 @@
 FROM php:7.0-fpm
 
-RUN useradd -r -s /bin/bash m2 
-RUN groupmod --gid 1000 m2
-RUN usermod -aG 1000 m2
-RUN usermod -u 1000 m2
+RUN groupadd magento2
+RUN groupmod --gid 1000 magento2
+RUN usermod -aG 1000 www-data
 
 COPY php.ini /usr/local/etc/php/
 
@@ -15,16 +14,16 @@ RUN apt-get update && apt-get install -y \
 		      libpng-dev \
 		      libjpeg-dev \
 		      libfreetype6-dev \
-        	      libjpeg62-turbo-dev \
-       		      libmcrypt-dev \
-        	      libpng12-dev \
-                      libpng12-dev \
-                      libssl-dev \
-                      libbz2-dev \
-                      libgmp-dev \
-                      libmcrypt-dev \
-                      libxml2-dev \
-                      libicu-dev \
+              libjpeg62-turbo-dev \
+              libmcrypt-dev \
+              libpng12-dev \
+              libpng12-dev \
+              libssl-dev \
+              libbz2-dev \
+              libgmp-dev \
+              libmcrypt-dev \
+              libxml2-dev \
+              libicu-dev \
 		      libxslt-dev 
 
 RUN  docker-php-ext-install -j$(nproc) iconv mcrypt \
@@ -41,8 +40,16 @@ RUN  docker-php-ext-install -j$(nproc) iconv mcrypt \
  
 RUN apt-get update && apt-get install -y \
         libssl-dev \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb
+        && pecl install mongodb \
+        && docker-php-ext-enable mongodb
+
+ENV TERM xterm
+ADD bashrc /var/www/html/.bashrc
+ADD bashrc /root/.bashrc
+
+RUN apt-get install nano -y && apt-get install sudo -y
+RUN apt-get update && apt-get install nodejs -y && apt-get install nodejs-legacy -y  && apt-get install npm -y
+RUN npm install -g grunt-cli -y
 
 RUN yes | pecl install xdebug
 ADD xdebug.ini /usr/local/etc/php/conf.d/
