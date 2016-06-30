@@ -143,5 +143,5 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 #export PS1="\u: \w"
 
 export PS1="$LIGHTBLUE[\w]\n"
-export PS1="$PS1$GREEN[nginx] $RED[ \u: $LIGHTRED$(id -ng)$RED] $YELLOW\$ $WHITE"
+export PS1="$PS1$GREEN[nginx] $RED[\u: $LIGHTRED$(id -ng)$RED] $YELLOW\$ $WHITE"
 

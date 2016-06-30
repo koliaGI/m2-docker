@@ -17,4 +17,4 @@ ADD bashrc /root/.bashrc
 COPY nginx.conf /etc/nginx/
 COPY default.conf /etc/nginx/conf.d/
 
-WORKDIR /var/www/magento2/src
+WORKDIR /var/www/magento2/

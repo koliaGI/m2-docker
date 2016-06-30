@@ -1,5 +1,7 @@
 FROM php:7.0-fpm
 
+WORKDIR /var/www/
+
 RUN groupadd magento2
 RUN groupmod --gid 1000 magento2
 RUN usermod -aG 1000 www-data

@@ -10,6 +10,7 @@ nginx:
    volumes_from:
        - data
    links:
+       - elastic:elastic
        - php:php
    volumes:
        - ./logs/nginx:/var/log/nginx
@@ -47,7 +48,5 @@ mongo:
 elastic:
     container_name: magento2_elastic
     build: builds/elastic
-    volumes:
-      - ./elastic/config:/usr/share/elasticsearch/config
-      - ./logs/elastic:/usr/share/elasticsearch/log
-      - ./elastic/data:/usr/share/elasticsearch/data
+
+
