@@ -1,52 +1,70 @@
-data:
-   container_name: magento2_data
-   image: busybox
-   volumes:
-       - ../magento2:/var/www/magento2/
+version: "2"
 
-nginx: 
-   container_name: magento2_nginx
-   build: builds/nginx
-   volumes_from:
-       - data
-   links:
-       - elastic:elastic
-       - php:php
-   volumes:
-       - ./logs/nginx:/var/log/nginx
+services:
 
-php:
-   container_name: magento2_php
-   build: builds/php
-   volumes_from:
-       - data
-   links:
-       - mysql:mysql
-       - mongo:mongo
-       - elastic:elastic
+  data:
+     container_name: m2_data
+     image: busybox
+     hostname: m2_data
+     networks:
+         m2_backend:
+     volumes:
+         - ../m2:/var/www/m2/
 
-mysql:
-   container_name: magento2_mysql
-   image: mysql:5.6
-   volumes:
-       - ./mysql:/var/lib/mysql
-       - ./logs/mysql:/var/log
-   environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: magento2
-        MYSQL_USER: root
-        MYSQL_PASSWORD: root
+  nginx:
+     container_name: m2_nginx
+     build: builds/nginx
+     networks:
+          m2_backend:
+          frontrouter_shared:
+     volumes_from:
+          - data
+     expose:
+          - 80
+          - 443
+     links:
+          - php:php
+     volumes:
+          - ./logs/nginx:/var/log/nginx
+     environment:
+          - VIRTUAL_HOST=m2.loc
 
-mongo:
-    container_name: magento2_mongo
-    build: builds/mongo
-    volumes:
-      - ./mongo:/data/db
-      - ./logs/mongo:/var/log/mongodb
-    command: --rest
+  php:
+     container_name: m2_php
+     build: builds/php
+     networks:
+          m2_backend:
+     volumes_from:
+          - data
+     links:
+          - mysql:mysql
+          - mongo:mongo
 
-elastic:
-    container_name: magento2_elastic
-    build: builds/elastic
+  mysql:
+     container_name: m2_mysql
+     image: mysql:5.6
+     networks:
+          m2_backend:
+     volumes:
+          - ./mysql:/var/lib/mysql
+          - ./logs/mysql:/var/log
+     environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: magento
+          MYSQL_USER: magento
+          MYSQL_PASSWORD: magento
 
+  mongo:
+      container_name: m2_mongo
+      build: builds/mongo
+      networks:
+          m2_backend:
+      volumes:
+          - ./mongo:/data/db
+          - ./logs/mongo:/var/log/mongodb
+      command: --rest
 
+networks:
+  m2_backend:
+  frontrouter_shared:
+    external: true
