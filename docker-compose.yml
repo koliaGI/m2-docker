@@ -11,7 +11,7 @@ services:
      volumes:
          - ../m2:/var/www/m2/
 
-  nginx:
+  nginx: 
      container_name: m2_nginx
      build: builds/nginx
      networks:
@@ -39,6 +39,8 @@ services:
      links:
           - mysql:mysql
           - mongo:mongo
+          - n4j:n4j
+          - arango:arango
 
   mysql:
      container_name: m2_mysql
@@ -63,6 +65,37 @@ services:
           - ./mongo:/data/db
           - ./logs/mongo:/var/log/mongodb
       command: --rest
+
+  n4j:
+      container_name: n4j
+      image: neo4j
+      networks:
+          m2_backend:
+      ports: 
+          - "7474:7474"
+          - "7687:7687"
+      expose:
+          - 7474
+          - 7687
+      volumes: 
+          - ./neo4j/data:/data
+          - ./logs/neo4j:/logs
+      environment:
+          - NEO4J_AUTH=none
+
+  arango:
+      container_name: arango
+      image: arangodb
+      networks:
+          m2_backend:
+      ports:
+          - "8529:8529"
+      expose:
+          - 8529
+      environment:
+          - ARANGO_NO_AUTH=1
+      volumes:
+          - ./arangodb/data:/var/lib/arangodb3
 
 networks:
   m2_backend:

@@ -11,9 +11,6 @@ RUN usermod -aG 1000 www-data
 
 RUN apt-get update && apt-get install vim -y
 
-ADD bashrc /var/www/html/.bashrc
-ADD bashrc /root/.bashrc
-
 COPY nginx.conf /etc/nginx/
 COPY default.conf /etc/nginx/conf.d/
 

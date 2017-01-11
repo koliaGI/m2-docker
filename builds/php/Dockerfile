@@ -43,8 +43,6 @@ RUN apt-get update && apt-get install -y \
         && docker-php-ext-enable mongodb
 
 ENV TERM xterm
-ADD bashrc /var/www/html/.bashrc
-ADD bashrc /root/.bashrc
 COPY php.ini /usr/local/etc/php/
 RUN apt-get install vim -y && apt-get install sudo -y
 RUN apt-get update && apt-get install nodejs -y && apt-get install nodejs-legacy -y  && apt-get install npm -y
