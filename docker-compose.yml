@@ -38,8 +38,6 @@ services:
           - data
      links:
           - mysql:mysql
-          - mongo:mongo
-          - n4j:n4j
           - arango:arango
 
   mysql:
@@ -56,35 +54,8 @@ services:
           MYSQL_USER: magento
           MYSQL_PASSWORD: magento
 
-  mongo:
-      container_name: m2_mongo
-      build: builds/mongo
-      networks:
-          m2_backend:
-      volumes:
-          - ./mongo:/data/db
-          - ./logs/mongo:/var/log/mongodb
-      command: --rest
-
-  n4j:
-      container_name: n4j
-      image: neo4j
-      networks:
-          m2_backend:
-      ports: 
-          - "7474:7474"
-          - "7687:7687"
-      expose:
-          - 7474
-          - 7687
-      volumes: 
-          - ./neo4j/data:/data
-          - ./logs/neo4j:/logs
-      environment:
-          - NEO4J_AUTH=none
-
   arango:
-      container_name: arango
+      container_name: m2_arango
       image: arangodb
       networks:
           m2_backend:
